@@ -1,11 +1,18 @@
-import React from "react";
+// src/pages/PlayGame.tsx
+import React, { useState } from "react";
 import Dice from "../../componens/Dice";
 import Pion from "../../componens/playGame/Pion";
 import DialogBar from "../../componens/dialogBar/DialogBar";
-const PlayGame: React.FC = () => {
-  const numberOfStaps = 100; // Ganti jadi lebih besar, misal 50, untuk melihat efek scroll
 
-  // Warna-warna acak yang berbeda untuk kotak
+const PlayGame: React.FC = () => {
+  const numberOfSteps = 100;
+
+  const [pionPosition, setPionPosition] = useState<number>(0);
+
+  const handleRoll = (diceValue: number) => {
+    setPionPosition((prev) => Math.min(prev + diceValue, numberOfSteps - 1));
+  };
+
   const colors = [
     "bg-red-500",
     "bg-blue-500",
@@ -21,25 +28,27 @@ const PlayGame: React.FC = () => {
 
   return (
     <div className="h-screen flex flex-col items-center justify-center bg-gray-900 p-6 w-full">
-      <DialogBar/>
+      <DialogBar />
       <h1 className="text-white text-2xl mb-6">Play Game</h1>
 
-      {/* Scrollable container (scroll muncul hanya jika overflow) */}
       <div className="w-full max-w-5xl overflow-x-auto mb-10 relative">
-        <Pion />
+        <div className="relative h-12">
+          <Pion position={pionPosition} />
+        </div>
         <div className="flex space-x-2 px-2">
-          {Array.from({ length: numberOfStaps }).map((_, index) => (
+          {Array.from({ length: numberOfSteps }).map((_, index) => (
             <div
               key={index}
-              className={`w-16 h-4 rounded-md ${colors[index % colors.length]} border-2 border-white flex-shrink-0`}
+              className={`w-16 h-4 rounded-md ${
+                colors[index % colors.length]
+              } border-2 border-white flex-shrink-0`}
             ></div>
           ))}
         </div>
       </div>
 
-      {/* Komponen Dice rata kanan */}
       <div className="w-full max-w-5xl flex justify-end">
-        <Dice />
+        <Dice onRoll={handleRoll} />
       </div>
     </div>
   );

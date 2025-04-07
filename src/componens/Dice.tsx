@@ -1,10 +1,17 @@
+// src/componens/Dice.tsx
 import React, { useState } from "react";
 
-const Dice: React.FC = () => {
+interface DiceProps {
+  onRoll: (value: number) => void;
+}
+
+const Dice: React.FC<DiceProps> = ({ onRoll }) => {
   const [number, setNumber] = useState<number>(1);
 
   const rollDice = () => {
-    setNumber(Math.floor(Math.random() * 6) + 1);
+    const result = Math.floor(Math.random() * 6) + 1;
+    setNumber(result);
+    onRoll(result);
   };
 
   const dotPositions: Record<number, string[]> = {
@@ -19,7 +26,7 @@ const Dice: React.FC = () => {
   return (
     <div className="flex flex-col items-center">
       <div
-        className="w-24 h-24 bg-white border-4 border-gray-800 rounded-xl grid grid-cols-3 grid-rows-3 p-2 gap-1"
+        className="w-24 h-24 bg-white border-4 border-gray-800 rounded-xl grid grid-cols-3 grid-rows-3 p-2 gap-1 cursor-pointer"
         onClick={rollDice}
       >
         {["top-left", "top-center", "top-right", "center", "bottom-left", "bottom-center", "bottom-right"].map(
