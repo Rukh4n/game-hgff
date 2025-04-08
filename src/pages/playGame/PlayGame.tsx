@@ -1,19 +1,16 @@
 // src/pages/PlayGame.tsx
-import React, { useState, useRef, useEffect } from "react";
+import React, { useRef, useEffect } from "react";
 import Dice from "../../componens/Dice";
 import Pion from "../../componens/playGame/Pion";
 import DialogBar from "../../componens/dialogBar/DialogBar";
+import { useAppSelector } from "../../hooks/hooks";
 
 const PlayGame: React.FC = () => {
   const data = JSON.parse(localStorage.getItem("data") || "{}");
   const numberOfSteps = parseInt(data.deathAge) || 100;
 
-  const [pionPosition, setPionPosition] = useState<number>(0);
+  const pionPosition = useAppSelector((state) => state.counter.value);
   const pionRef = useRef<HTMLDivElement>(null);
-
-  const handleRoll = (diceValue: number) => {
-    setPionPosition((prev) => Math.min(prev + diceValue, numberOfSteps - 1));
-  };
 
   useEffect(() => {
     pionRef.current?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
@@ -42,11 +39,7 @@ const PlayGame: React.FC = () => {
 
         <div className="w-full max-w-5xl overflow-x-auto mb-10 relative">
           <div className="relative h-12">
-            <div
-              ref={pionRef}
-              className="absolute transition-all duration-300"
-              style={{ left: `${pionPosition * 4.5}rem` }}
-            >
+            <div ref={pionRef}>
               <Pion />
             </div>
           </div>
@@ -63,7 +56,7 @@ const PlayGame: React.FC = () => {
         </div>
 
         <div className="w-full max-w-5xl flex justify-end">
-          <Dice onRoll={handleRoll} />
+          <Dice />
         </div>
       </div>
     </>

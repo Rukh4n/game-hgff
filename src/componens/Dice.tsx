@@ -1,17 +1,14 @@
 // src/componens/Dice.tsx
-import React, { useState } from "react";
+import React from "react";
+import { useAppDispatch } from "../hooks/hooks";
+import { rollDice } from "../features/counter/counterSlice";
 
-interface DiceProps {
-  onRoll: (value: number) => void;
-}
+const Dice: React.FC = () => {
+  const dispatch = useAppDispatch();
 
-const Dice: React.FC<DiceProps> = ({ onRoll }) => {
-  const [number, setNumber] = useState<number>(1);
-
-  const rollDice = () => {
+  const roll = () => {
     const result = Math.floor(Math.random() * 6) + 1;
-    setNumber(result);
-    onRoll(result);
+    dispatch(rollDice(result));
   };
 
   const dotPositions: Record<number, string[]> = {
@@ -23,11 +20,13 @@ const Dice: React.FC<DiceProps> = ({ onRoll }) => {
     6: ["top-left", "top-center", "top-right", "bottom-left", "bottom-center", "bottom-right"],
   };
 
+  const number = Math.floor(Math.random() * 6) + 1; // dummy number for render
+
   return (
     <div className="flex flex-col items-center">
       <div
         className="w-24 h-24 bg-white border-4 border-gray-800 rounded-xl grid grid-cols-3 grid-rows-3 p-2 gap-1 cursor-pointer"
-        onClick={rollDice}
+        onClick={roll}
       >
         {["top-left", "top-center", "top-right", "center", "bottom-left", "bottom-center", "bottom-right"].map(
           (pos) => (
@@ -41,7 +40,7 @@ const Dice: React.FC<DiceProps> = ({ onRoll }) => {
         )}
       </div>
       <button
-        onClick={rollDice}
+        onClick={roll}
         className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition"
       >
         Roll Dice

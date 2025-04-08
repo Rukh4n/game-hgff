@@ -1,3 +1,4 @@
+// src/features/game/counterSlice.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface CounterState {
@@ -10,11 +11,14 @@ const counterSlice = createSlice({
   name: 'counter',
   initialState,
   reducers: {
-    increment: (state) => { state.value += 1; },
-    decrement: (state) => { state.value -= 1; },
-    incrementByAmount: (state, action: PayloadAction<number>) => { state.value += action.payload; },
+    rollDice: (state, action: PayloadAction<number>) => {
+      state.value += action.payload;
+    },
+    reset: (state) => {
+      state.value = 0;
+    },
   },
 });
 
-export const { increment, decrement, incrementByAmount } = counterSlice.actions;
+export const { rollDice, reset } = counterSlice.actions;
 export default counterSlice.reducer;
