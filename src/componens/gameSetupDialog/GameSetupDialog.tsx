@@ -10,6 +10,7 @@ const GameSetupDialog: React.FC = () => {
     numberOfChildren: "",
     numberOfPartners: "",
     mealPrice: "",
+    savings: "",
   });
 
   const [errors, setErrors] = useState({
@@ -22,10 +23,13 @@ const GameSetupDialog: React.FC = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+
     setFormData((prev) => ({
       ...prev,
       [name]: value,
+      ...(name === "mealPrice" && { savings: value }),
     }));
+
     setErrors((prev) => ({
       ...prev,
       [name]: false,
@@ -46,8 +50,14 @@ const GameSetupDialog: React.FC = () => {
     const hasError = Object.values(newErrors).some((error) => error);
 
     if (!hasError) {
-      localStorage.setItem("data", JSON.stringify(formData));
-      console.log("Data disimpan:", formData);
+      const adjustedFormData = {
+        ...formData,
+        deathAge:
+          (parseInt(formData.deathAge) * 4 * 12 - 4 * 12 * 15).toString(),
+      };
+
+      localStorage.setItem("data", JSON.stringify(adjustedFormData));
+      console.log("Data disimpan:", adjustedFormData);
       navigate("/play-game");
     } else {
       console.warn("Harap isi semua input terlebih dahulu.");
